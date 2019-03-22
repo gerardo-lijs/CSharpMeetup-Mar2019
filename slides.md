@@ -25,8 +25,9 @@ while (true)
 ```
 
 * Compute bound operations
-Use Task.Run to execute some expensive compute code asyncrhonically
+Use Task.Run to execute expensive CPU-bound code asynchronically
 
+Define a Task returning method
 ```csharp
 Task<int> GetPrimesCountAsync (int start, int count)
 {
@@ -36,12 +37,9 @@ Task<int> GetPrimesCountAsync (int start, int count)
 }
 ```
 
+Call method with await
 ```csharp
-int result = Task.Run(() => 
-{ 
-    int primeNumber = ComputeExpensivePrimeNumberMath(); 
-    return primeNumber; 
-});
+int result = await GetPrimesCountAsync (2, 1000000);
 ```
 
 * You can also use an async anonymoous method if you need to run asynchronous code
