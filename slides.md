@@ -35,3 +35,16 @@ while (true)
 * TaskCompletionSource
 
 * Synchronous Versus Asynchronous Operations
+
+## Web applications
+* Improves throughput because of reduced number of threads usage, less memory use and less CPU use
+
+[Insert two graph / before / after]
+
+Source: https://caleblloyd.com/software/net-core-mvc-thread-pool-vs-async/
+
+* Use async EntityFramework methods (using System.Data.Entity namespace)
+* Use async for consuming REST API
+* Use async for file IO
+* Use async for network IO
+* Use async for ...
