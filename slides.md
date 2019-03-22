@@ -67,10 +67,14 @@ int result = await GetPrimesCountAsync (2, 1000000);
 
 ## IO-bound operations
 * Hard drive
+
+[TODO: Insert sample here with StreamReader]
+
 * Network
+
 * Database
 
-[TODO: Insert sample here]
+[TODO: Insert sample here with EntityFramework]
 
 ## Parallel programming
 
