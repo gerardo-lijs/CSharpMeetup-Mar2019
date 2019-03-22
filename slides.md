@@ -25,6 +25,34 @@ while (true)
 ```
 
 * Compute bound operations
+Use Task.Run to execute some expensive compute code asyncrhonically
+
+```csharp
+int result = Task.Run(() => 
+{ 
+    int primeNumber = ComputeExpensivePrimeNumberMath(); 
+    return primeNumber; 
+});
+```
+
+```csharp
+int result = Task.Run(() => 
+{ 
+    int primeNumber = ComputeExpensivePrimeNumberMath(); 
+    return primeNumber; 
+});
+```
+
+* You can also use an async anonymoous method if you need to run asynchronous code
+
+```csharp
+int result = await Task.Run(async () => 
+{ 
+    await Task.Delay(1000); 
+    return 42; 
+});
+```
+
 * Network
 
 ## Parallel programming
@@ -33,6 +61,8 @@ while (true)
 * Thread Pool
 * Tasks (Framework 4.5)
 * TaskCompletionSource
+
+* Task Cancellation
 
 * Synchronous Versus Asynchronous Operations
 
@@ -48,3 +78,44 @@ Source: https://caleblloyd.com/software/net-core-mvc-thread-pool-vs-async/
 * Use async for file IO
 * Use async for network IO
 * Use async for ...
+
+
+## Running asynchronous method synchronously
+Use helper method borrowed from Microsoft
+
+```csharp
+public static class AsyncHelper  
+{
+    private static readonly TaskFactory _taskFactory = new
+        TaskFactory(CancellationToken.None,
+                    TaskCreationOptions.None,
+                    TaskContinuationOptions.None,
+                    TaskScheduler.Default);
+
+    public static TResult RunSync<TResult>(Func<Task<TResult>> func)
+        => _taskFactory
+            .StartNew(func)
+            .Unwrap()
+            .GetAwaiter()
+            .GetResult();
+
+    public static void RunSync(Func<Task> func)
+        => _taskFactory
+            .StartNew(func)
+            .Unwrap()
+            .GetAwaiter()
+            .GetResult();
+}
+```
+
+Use like this
+
+```csharp
+    //command
+    AsyncHelper.RunSync(() => DoAsyncStuff());  
+
+    //query
+    var result = AsyncHelper.RunSync(() => DoAsyncStuff());  
+```
+
+Source: https://cpratt.co/async-tips-tricks/
