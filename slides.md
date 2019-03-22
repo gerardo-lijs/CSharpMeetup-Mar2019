@@ -9,7 +9,15 @@ Practical use cases
 
 ## Obsolete patterns
 * Background worker
-* EAP and APM
+
+* EAP
+
+* Asynchronous Programming Model (APM)
+[Obsolete]
+```csharp
+public IAsyncResult BeginRead (byte[] buffer, int offset, int size, AsyncCallback callback, object state);
+public int EndRead (IAsyncResult asyncResult);
+```
 
 ## CPU bound vs IO bound
 * Blocking vs Callbacks
@@ -61,7 +69,70 @@ int result = await GetPrimesCountAsync (2, 1000000);
 * Tasks (Framework 4.5)
 * TaskCompletionSource
 
-* Task Cancellation
+## Task Cancellation
+Use CancellationToken in your method and check manually
+
+```csharp
+async Task Foo (CancellationToken cancellationToken)
+{
+  for (int i = 0; i < 10; i++)
+  {
+    Console.WriteLine (i);
+    await Task.Delay (1000);
+    cancellationToken.ThrowIfCancellationRequested();
+  }
+}
+```
+
+Use CancellationTokenSource / Linked
+
+Extension method
+```csharp
+public static Task<TResult> WithCancellation<TResult> (this Task<TResult> task, CancellationToken cancelToken)
+{
+    var tcs = new TaskCompletionSource<TResult>();
+    var reg = cancelToken.Register (() => tcs.TrySetCanceled ());
+    task.ContinueWith (ant =>
+    {
+        reg.Dispose();
+        if (ant.IsCanceled)
+            tcs.TrySetCanceled();
+        else if (ant.IsFaulted)
+            tcs.TrySetException (ant.Exception.InnerException);
+        else
+            tcs.TrySetResult (ant.Result);
+    });
+    return tcs.Task;
+}
+```
+
+[TODO: Insert cample here]
+
+## Run a Task with a Timeout
+
+[TODO: Insert cample here]
+
+Extension method
+```csharp
+public async static Task<TResult> WithTimeout<TResult> (this Task<TResult> task, TimeSpan timeout)
+{
+    Task winner = await (Task.WhenAny (task, Task.Delay (timeout)));
+    if (winner != task) throw new TimeoutException();
+    return await task; // Unwrap result/re-throw
+}
+```
+  
+Source: C# in a Nutshell
+
+## Progress reporting
+
+[TODO: Insert cample here]
+
+## Parallel tasks
+We can use Task.WhenAny and Task.WhenAll
+
+[TODO: Insert cample here]
+
 
 * Synchronous Versus Asynchronous Operations
 
