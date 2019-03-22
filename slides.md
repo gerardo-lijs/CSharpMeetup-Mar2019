@@ -24,8 +24,8 @@ while (true)
   await Task.Delay(500);
 ```
 
-* Compute bound operations
-Use Task.Run to execute expensive CPU-bound code asynchronically
+## CPU-bound (compute-bound) operations
+Use Task.Run to execute expensive CPU-bound code in the ThreadPool
 
 Define a Task returning method
 ```csharp
@@ -42,17 +42,17 @@ Call method with await
 int result = await GetPrimesCountAsync (2, 1000000);
 ```
 
-* You can also use an async anonymoous method if you need to run asynchronous code
+## Cancelling a CPU-bound method
 
-```csharp
-int result = await Task.Run(async () => 
-{ 
-    await Task.Delay(1000); 
-    return 42; 
-});
-```
+[TODO: Insert sample here]
 
+
+## IO-bound operations
+* Hard drive
 * Network
+* Database
+
+[TODO: Insert sample here]
 
 ## Parallel programming
 
@@ -114,3 +114,7 @@ var result = AsyncHelper.RunSync(() => DoAsyncStuff());
 ```
 
 Source: https://cpratt.co/async-tips-tricks/
+
+
+## Exception Handling
+
