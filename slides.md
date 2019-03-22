@@ -199,5 +199,87 @@ var result = AsyncHelper.RunSync(() => DoAsyncStuff());
 Source: https://cpratt.co/async-tips-tricks/
 
 
+## Async class constructors
+* They are not available by default in the framework.
+* Refactor with InitializeAsync method
+
+Previous class
+```csharp
+public class ExampleClass
+{
+	public ExampleClass()
+	{
+		// Current initialization code here
+	}
+}
+```
+
+Refactored class
+```csharp
+public class ExampleClass
+{
+	public ExampleClass()
+	{
+		// No more code here
+	}
+
+	public async Task InitializeAsync()
+	{
+		// Previous initialization code moved here
+		// Plus you can call async methods with await now
+		// Problem -> Consumers need to know they have to always run this method after creating class
+    // It's better to use Factory Pattern in my opinion
+	}
+}
+```
+
+You now have to use your class like this
+```csharp
+    var classInstance = new ExampleClass();
+    await classInstance.InitializeAsync();
+```
+
+* Refactor with Factory Pattern
+
+Previous class
+```csharp
+public class ExampleClass
+{
+	public ExampleClass()
+	{
+		// Current initialization code here
+	}
+}
+```
+
+Refactored class
+```csharp
+public class ExampleClass
+{
+    // We explicitly create a private parameterless constructor so that we are forced to use the static async method
+	private ExampleClass() {}		
+
+	public static async Task<ExampleClass> CreateAsync()
+    {
+		var ret = new ExampleClass();
+
+		// Previous initialization code moved here
+		// Plus you can call async methods with await now
+
+		return ret;
+	}
+}
+```
+
+You now have to use your class like this
+```csharp
+    var classInstance = await ExampleClass.CreateAsync();
+```
+
+* Many other options from Stephen Cleary
+[Async Constructors by Stephen Cleary (2013)](http://blog.stephencleary.com/2013/01/async-oop-2-constructors.html)
+
+* Use AsyncHelper.RunSync which works quite well most of the times without Blocking but you loose all the beneficts of async code
+
 ## Exception Handling
 
