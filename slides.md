@@ -28,11 +28,12 @@ while (true)
 Use Task.Run to execute some expensive compute code asyncrhonically
 
 ```csharp
-int result = Task.Run(() => 
-{ 
-    int primeNumber = ComputeExpensivePrimeNumberMath(); 
-    return primeNumber; 
-});
+Task<int> GetPrimesCountAsync (int start, int count)
+{
+    return Task.Run (() =>
+        ParallelEnumerable.Range (start, count).Count (n =>
+            Enumerable.Range (2, (int)Math.Sqrt(n)-1).All (i => n % i > 0)));
+}
 ```
 
 ```csharp
@@ -111,11 +112,7 @@ public static class AsyncHelper
 Use like this
 
 ```csharp
-    //command
-    AsyncHelper.RunSync(() => DoAsyncStuff());  
-
-    //query
-    var result = AsyncHelper.RunSync(() => DoAsyncStuff());  
+var result = AsyncHelper.RunSync(() => DoAsyncStuff());  
 ```
 
 Source: https://cpratt.co/async-tips-tricks/
