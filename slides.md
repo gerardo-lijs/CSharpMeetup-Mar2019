@@ -8,12 +8,22 @@ Practical use cases
 * Scalabilty and performance in web applications
 
 ## Obsolete patterns
-* Background worker
+* BackgroundWorker
+```csharp
+backgroundWorker1.DoWork += new DoWorkEventHandler(backgroundWorker1_DoWork);
+backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker1_RunWorkerCompleted);
+backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker1_ProgressChanged);
+```
+Complete source: https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.backgroundworker
 
-* EAP
+* Event-Based Asynchronous Pattern (EAP)
+```csharp
+public void DownloadDataAsync (Uri address);
+public event DownloadDataCompletedEventHandler DownloadDataCompleted;
+public bool IsBusy { get; } // Indicates if still running
+```
 
 * Asynchronous Programming Model (APM)
-[Obsolete]
 ```csharp
 public IAsyncResult BeginRead (byte[] buffer, int offset, int size, AsyncCallback callback, object state);
 public int EndRead (IAsyncResult asyncResult);
