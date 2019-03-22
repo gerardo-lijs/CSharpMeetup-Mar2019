@@ -11,13 +11,13 @@ Practical use cases
 * Scalabilty and performance in web applications
 
 ## Obsolete patterns
+
 * BackgroundWorker
 ```csharp
 backgroundWorker1.DoWork += new DoWorkEventHandler(backgroundWorker1_DoWork);
 backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker1_RunWorkerCompleted);
 backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker1_ProgressChanged);
 ```
-Complete source: https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.backgroundworker
 
 * Event-Based Asynchronous Pattern (EAP)
 ```csharp
