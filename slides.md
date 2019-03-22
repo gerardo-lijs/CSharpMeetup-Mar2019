@@ -1,7 +1,10 @@
 # Slides
 
-## Introduction to Asynchronous Programming in .NET
-What is Asynchronous Programming
+## Asynchronous Programming in .NET
+* What is Asynchronous Programming
+* CPU-bound vs IO-bound
+* Obsolete patterns
+* Tasks and async/await
 
 Practical use cases
 * Reponsive user interfaces (WPF, WinForms, etc)
@@ -29,17 +32,11 @@ public IAsyncResult BeginRead (byte[] buffer, int offset, int size, AsyncCallbac
 public int EndRead (IAsyncResult asyncResult);
 ```
 
-## CPU bound vs IO bound
+## CPU-bound vs IO-bound
 * Blocking vs Callbacks
-
 ```csharp
 while (true)
   Thread.Sleep(500);
-```
-
-```csharp
-while (true)
-  await Task.Delay(500);
 ```
 
 ## CPU-bound (compute-bound) operations
@@ -137,7 +134,8 @@ public async static Task<TResult> WithTimeout<TResult> (this Task<TResult> task,
 ```
   
 Source: C# in a Nutshell
-
+Source: David Fowler -> AspNetCoreDiagnosticScenarios/Scenarios/Infrastructure/TaskExtensions.cs
+      
 ## Progress reporting
 
 [TODO: Insert cample here]
