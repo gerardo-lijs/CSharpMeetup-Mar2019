@@ -245,10 +245,10 @@ Previous class
 ```csharp
 public class ExampleClass
 {
-	public ExampleClass()
-	{
-		// Current initialization code here
-	}
+    public ExampleClass()
+    {
+        // Current initialization code here
+    }
 }
 ```
 
@@ -257,20 +257,20 @@ Refactored class
 public class ExampleClass
 {
     // We explicitly create a private parameterless constructor so that we are forced to use the static async method
-	private ExampleClass() {}		
+    private ExampleClass() {}		
 
-	public async Task InitializeAsync()
-	{
-		// Previous initialization code moved here
-		// Plus you can call async methods with await now
-	}
+    public async Task InitializeAsync()
+    {
+        // Previous initialization code moved here
+        // Plus you can call async methods with await now
+    }
 
-	public static async Task<ExampleClass> CreateAsync()
-	{
-		var ret = new ExampleClass();
-		await ret.InitializeAsync();
-		return ret;
-	}
+    public static async Task<ExampleClass> CreateAsync()
+    {
+        var ret = new ExampleClass();
+        await ret.InitializeAsync();
+        return ret;
+    }
 }
 ```
 
