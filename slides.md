@@ -256,10 +256,11 @@ Refactored class
 ```csharp
 public class ExampleClass
 {
-    // We explicitly create a private parameterless constructor so that we are forced to use the static async method
+    // We explicitly create a private parameterless constructor 
+    // so that we are forced to use the static async method
     private ExampleClass() {}		
 
-    public async Task InitializeAsync()
+    private async Task InitializeAsync()
     {
         // Previous initialization code moved here
         // Plus you can call async methods with await now
