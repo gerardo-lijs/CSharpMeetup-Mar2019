@@ -25,19 +25,20 @@ namespace AsyncDesktopDemo
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             int.TryParse(StartNumberTextBox.Text, out int start);
             int.TryParse(EndNumberTextBox.Text, out int end);
 
             ResultTextBlock.Text = "";
-            int result = GetPrimesCount(start, end);
+            int result = await GetPrimesCount(start, end);
             ResultTextBlock.Text = $"{result} prime numbers between {start} and {end}";
         }
 
-        private int GetPrimesCount(int start, int count)
+        private Task<int> GetPrimesCount(int start, int count)
         {
-            return ParallelEnumerable.Range(start, count).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0));
+            return Task.Run(() =>
+                ParallelEnumerable.Range(start, count).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0)));
         }
     }
 }
