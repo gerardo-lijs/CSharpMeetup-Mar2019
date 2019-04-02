@@ -29,6 +29,7 @@ namespace AsyncDesktopDemo
         {
             int.TryParse(StartNumberTextBox.Text, out int start);
             int.TryParse(EndNumberTextBox.Text, out int end);
+            if (start == 0 || end == 0) return;
 
             ResultTextBlock.Text = "";
             int result = await GetPrimesCount(start, end);

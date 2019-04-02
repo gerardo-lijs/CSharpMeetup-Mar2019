@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsyncDesktopDemo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="400">
-    <Grid>
-        <StackPanel>
-            <TextBox x:Name="StartNumberTextBox">2</TextBox>
-            <TextBox x:Name="EndNumberTextBox">50000000</TextBox>
-            <Button Click="Button_Click">Execute expensive CPU code</Button>
-            <TextBlock x:Name="ResultTextBlock" />
-        </StackPanel>
-    </Grid>
+        Title="MainWindow" Height="400" Width="300" ResizeMode="NoResize">
+
+    <StackPanel Width="200" >
+        <Label>Start number</Label>
+        <TextBox x:Name="StartNumberTextBox" Margin="5" >1</TextBox>
+        <Label>End number</Label>
+        <TextBox x:Name="EndNumberTextBox" Margin="5">50000000</TextBox>
+
+        <Button Click="Button_Click" Margin="5">Calculate prime numbers</Button>
+        <TextBlock x:Name="ResultTextBlock" TextWrapping="Wrap" Margin="5" />
+    </StackPanel>
 </Window>
