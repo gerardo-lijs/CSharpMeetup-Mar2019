@@ -32,11 +32,11 @@ namespace AsyncDesktopDemo
             if (start == 0 || end == 0) return;
 
             ResultTextBlock.Text = "";
-            int result = await GetPrimesCount(start, end);
+            int result = await GetPrimesCountAsync(start, end);
             ResultTextBlock.Text = $"{result} prime numbers between {start} and {end}";
         }
 
-        private Task<int> GetPrimesCount(int start, int count)
+        private Task<int> GetPrimesCountAsync(int start, int count)
         {
             return Task.Run(() =>
                 ParallelEnumerable.Range(start, count).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0)));
