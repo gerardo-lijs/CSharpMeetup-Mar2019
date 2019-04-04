@@ -9,36 +9,44 @@ namespace AsyncWebAPIDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class IOBoundController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        private async Task<string> GetHtmlAsync()
         {
-            await Task.Delay(2000);
-            return new string[] { "value1", "value2" };
+            var client = new System.Net.Http.HttpClient();
+            string response = await client.GetStringAsync("https://www.dotnetfoundation.org");
+            return response;
         }
 
-        // GET api/values/5
+        // GET api/iobound
+        // .\bombardier.exe "http://localhost:5001/api/iobound" -n 20 -t 100s
+        [HttpGet]
+        public async Task<ActionResult<int>> Get()
+        {
+            var webContent = await GetHtmlAsync();
+            return webContent.Length;
+        }
+
+        // GET api/iobound/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
             return "value";
         }
 
-        // POST api/values
+        // POST api/iobound
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/values/5
+        // PUT api/iobound/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/iobound/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
