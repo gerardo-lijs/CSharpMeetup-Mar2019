@@ -11,8 +11,6 @@ namespace AsyncWebAPIDemo.Controllers
     [ApiController]
     public class CPUBoundController : ControllerBase
     {
-        private static int requestCount = 0;
-
         private int GetPrimesCount(int start, int count)
         {
             return ParallelEnumerable.Range(start, count).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0));
@@ -23,33 +21,7 @@ namespace AsyncWebAPIDemo.Controllers
         [HttpGet]
         public ActionResult<int> Get([FromQuery] int start, [FromQuery] int end)
         {
-            Interlocked.Increment(ref requestCount);
             return GetPrimesCount(start, end);
-        }
-
-        // GET api/cpubound/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/cpubound
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/cpubound/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/cpubound/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
