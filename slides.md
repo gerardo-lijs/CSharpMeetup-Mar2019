@@ -7,7 +7,7 @@
 * Tasks and async/await
 
 Practical use cases
-* Reponsive user interfaces (WPF, WinForms, etc)
+* Responsive user interfaces (WPF, WinForms, etc)
 * Scalabilty and performance in web applications
 
 ## Obsolete patterns
