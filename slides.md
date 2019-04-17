@@ -8,7 +8,7 @@
 
 Practical use cases
 * Responsive user interfaces (WPF, WinForms, etc)
-* Scalabilty and performance in web applications
+* Scalability and performance in web applications
 
 ## Obsolete patterns
 
