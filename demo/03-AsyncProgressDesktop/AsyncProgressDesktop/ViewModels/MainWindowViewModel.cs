@@ -26,44 +26,29 @@ namespace AsyncProgressDesktop.ViewModels
             set => this.RaiseAndSetIfChanged(ref _EndNumber, value);
         }
 
-        private string _PrimesCountResultText;
-        public string PrimesCountResultText
+        private string _ResultText;
+        public string ResultText
         {
-            get => _PrimesCountResultText;
-            private set => this.RaiseAndSetIfChanged(ref _PrimesCountResultText, value);
+            get => _ResultText;
+            private set => this.RaiseAndSetIfChanged(ref _ResultText, value);
         }
 
-        private bool _IsCalculating;
-        public bool IsCalculating
-        {
-            get => _IsCalculating;
-            private set => this.RaiseAndSetIfChanged(ref _IsCalculating, value);
-        }
+        private readonly ObservableAsPropertyHelper<bool> _IsCalculating;
+        public bool IsCalculating => _IsCalculating.Value;
 
         public MainWindowViewModel()
         {
             // Create command
             CalculatePrimeNumbers = ReactiveCommand.CreateFromTask(CalculatePrimeNumbersImpl);
-
-            //_isAvailable = this
-            //           .WhenAnyValue(x => x.SearchResults)
-            //           .Select(searchResults => searchResults != null)
-            //           .ToProperty(this, x => x.IsAvailable);
+            CalculatePrimeNumbers.IsExecuting.ToProperty(this, x => x.IsCalculating, out _IsCalculating);
         }
 
         private async Task CalculatePrimeNumbersImpl()
         {
-            // Notify UI that calculation is in progress
-            IsCalculating = true;
-
-            // Calculate
             int primesCount = await Task.Run(() =>
                  ParallelEnumerable.Range(StartNumber, EndNumber).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0)));
 
-            PrimesCountResultText = $"{primesCount} prime numbers between {StartNumber} and {EndNumber}";
-
-            // Notify UI that calculation is finished
-            IsCalculating = false;
+            ResultText = $"{primesCount} prime numbers between {StartNumber} and {EndNumber}";
         }
     }
 }

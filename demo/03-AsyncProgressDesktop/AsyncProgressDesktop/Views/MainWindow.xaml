@@ -19,5 +19,7 @@
 
         <Button x:Name="CalculatePrimeNumbersButton" Margin="5" Content="Calculate prime numbers" />
         <TextBlock x:Name="ResultTextBlock" TextWrapping="Wrap" Margin="5" />
+
+        <Controls:ProgressRing x:Name="CalculatingProgress" IsActive="True" />
     </StackPanel>
 </reactiveui:ReactiveWindow>
