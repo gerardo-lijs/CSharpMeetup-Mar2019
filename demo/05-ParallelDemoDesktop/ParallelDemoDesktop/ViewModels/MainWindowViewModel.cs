@@ -1,5 +1,7 @@
-﻿using ReactiveUI;
+﻿using OpenCvSharp;
+using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -32,7 +34,7 @@ namespace AsyncCancelDesktop.ViewModels
         {
             // Create command
             ProcessImages = ReactiveCommand.CreateFromTask(ProcessImagesImpl);
-            ProcessImagesParallel = ReactiveCommand.CreateFromTask(ProcessImagesImpl);
+            ProcessImagesParallel = ReactiveCommand.CreateFromTask(ProcessImagesParallelImpl);
 
             // Progress
             _IsCalculating = this.WhenAnyObservable(x => x.ProcessImages.IsExecuting, x => x.ProcessImagesParallel.IsExecuting, (processImages, processImagesParallel) => processImages || processImagesParallel)
@@ -46,11 +48,65 @@ namespace AsyncCancelDesktop.ViewModels
         {
             _ctsCancel = new CancellationTokenSource();
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             try
             {
-                await Task.Delay(5000);
+                await Task.Run(() =>
+                {
+                    foreach (var filename in System.IO.Directory.EnumerateFiles(Environment.CurrentDirectory, "*.png"))
+                    {
+                        for (int i = 0; i < 500; i++)
+                        {
+                            Mat src = new Mat(filename);
+                            Mat resut = src.Canny(50, 200);
+                        }
 
-                ResultText = $"Process took xx seconds";
+                        //using (new Window($"src image {filename}", src))
+                        //using (new Window($"resut image {filename}", resut))
+                        //{
+                        //    //Cv2.WaitKey();
+                        //}
+                    }
+                });
+
+                ResultText = $"Process took {sw.Elapsed.TotalSeconds} seconds";
+            }
+            catch (OperationCanceledException)
+            {
+                ResultText = "Cancelled";
+            }
+        }
+
+        private async Task ProcessImagesParallelImpl()
+        {
+            _ctsCancel = new CancellationTokenSource();
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Parallel.ForEach(System.IO.Directory.EnumerateFiles(Environment.CurrentDirectory, "*.png"), (filename) =>
+                    {
+                        for (int i = 0; i < 500; i++)
+                        {
+                            Mat src = new Mat(filename);
+                            Mat resut = src.Canny(50, 200);
+                        }
+
+                        //using (new Window($"src image {filename}", src))
+                        //using (new Window($"resut image {filename}", resut))
+                        //{
+                        //    //Cv2.WaitKey();
+                        //}
+                    });
+                });
+
+                ResultText = $"Process took {sw.Elapsed.TotalSeconds} seconds";
             }
             catch (OperationCanceledException)
             {
