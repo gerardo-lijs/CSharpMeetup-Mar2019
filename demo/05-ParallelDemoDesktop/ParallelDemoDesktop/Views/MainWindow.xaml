@@ -11,9 +11,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="300" ResizeMode="NoResize">
 
-    <StackPanel Width="200" >
-        <Button x:Name="ProcessImagesButton" Margin="5" Content="Process images" />
-        <Button x:Name="ProcessImagesParallelButton" Margin="5" Content="Process images in parallel" />
+    <StackPanel Width="250" >
+        <StackPanel Margin="10">
+            <Button x:Name="ProcessImagesButton" Margin="5" Content="Process images" />
+            <Button x:Name="ProcessImagesParallelButton" Margin="5" Content="Process images (Parallel.ForEach)" />
+        </StackPanel>
+
+        <StackPanel Margin="10">
+            <Button x:Name="ProcessWebButton" Margin="5" Content="Process web" />
+            <Button x:Name="ProcessWebParallelButton" Margin="5" Content="Process web (WhenAll)" />
+        </StackPanel>
 
         <TextBlock x:Name="ResultTextBlock" TextWrapping="Wrap" Margin="5" />
         <Controls:ProgressRing x:Name="CalculatingProgress" IsActive="True" />

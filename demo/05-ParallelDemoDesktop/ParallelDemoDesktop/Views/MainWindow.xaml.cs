@@ -19,6 +19,9 @@ namespace AsyncCancelDesktop.Views
                 this.BindCommand(ViewModel, viewModel => viewModel.ProcessImages, view => view.ProcessImagesButton).DisposeWith(disposableRegistration);
                 this.BindCommand(ViewModel, viewModel => viewModel.ProcessImagesParallel, view => view.ProcessImagesParallelButton).DisposeWith(disposableRegistration);
 
+                this.BindCommand(ViewModel, viewModel => viewModel.ProcessWeb, view => view.ProcessWebButton).DisposeWith(disposableRegistration);
+                this.BindCommand(ViewModel, viewModel => viewModel.ProcessWebParallel, view => view.ProcessWebParallelButton).DisposeWith(disposableRegistration);
+
                 // Progress
                 this.OneWayBind(ViewModel, viewModel => viewModel.IsCalculating, view => view.CalculatingProgress.Visibility)
                     .DisposeWith(disposableRegistration);

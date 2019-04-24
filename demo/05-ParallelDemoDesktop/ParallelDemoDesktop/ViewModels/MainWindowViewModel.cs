@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
@@ -15,6 +16,9 @@ namespace AsyncCancelDesktop.ViewModels
         // Commands
         public ReactiveCommand<Unit, Unit> ProcessImages { get; }
         public ReactiveCommand<Unit, Unit> ProcessImagesParallel { get; }
+
+        public ReactiveCommand<Unit, Unit> ProcessWeb { get; }
+        public ReactiveCommand<Unit, Unit> ProcessWebParallel { get; }
 
         // Cancel
         public ReactiveCommand<Unit, Unit> CalculateCancel { get; }
@@ -36,8 +40,13 @@ namespace AsyncCancelDesktop.ViewModels
             ProcessImages = ReactiveCommand.CreateFromTask(ProcessImagesImpl);
             ProcessImagesParallel = ReactiveCommand.CreateFromTask(ProcessImagesParallelImpl);
 
+            ProcessWeb = ReactiveCommand.CreateFromTask(ProcessWebImpl);
+            ProcessWebParallel = ReactiveCommand.CreateFromTask(ProcessWebParallelImpl);
+
             // Progress
-            _IsCalculating = this.WhenAnyObservable(x => x.ProcessImages.IsExecuting, x => x.ProcessImagesParallel.IsExecuting, (processImages, processImagesParallel) => processImages || processImagesParallel)
+            _IsCalculating = this.WhenAnyObservable(x => x.ProcessImages.IsExecuting, x => x.ProcessImagesParallel.IsExecuting,
+                x => x.ProcessWeb.IsExecuting, x => x.ProcessWebParallel.IsExecuting,
+                (processImages, processImagesParallel, processWeb, processWebParallel) => processImages || processImagesParallel || processWeb || processWebParallel)
                 .ToProperty(this, x => x.IsCalculating);
 
             // Cancel command
@@ -59,6 +68,8 @@ namespace AsyncCancelDesktop.ViewModels
                     {
                         for (int i = 0; i < 500; i++)
                         {
+                            _ctsCancel.Token.ThrowIfCancellationRequested();
+
                             Mat src = new Mat(filename);
                             Mat resut = src.Canny(50, 200);
                         }
@@ -90,21 +101,96 @@ namespace AsyncCancelDesktop.ViewModels
             {
                 await Task.Run(() =>
                 {
-                    Parallel.ForEach(System.IO.Directory.EnumerateFiles(Environment.CurrentDirectory, "*.png"), (filename) =>
+                    try
                     {
-                        for (int i = 0; i < 500; i++)
+                        Parallel.ForEach(System.IO.Directory.EnumerateFiles(Environment.CurrentDirectory, "*.png"), (filename) =>
                         {
-                            Mat src = new Mat(filename);
-                            Mat resut = src.Canny(50, 200);
-                        }
+                            for (int i = 0; i < 500; i++)
+                            {
+                                _ctsCancel.Token.ThrowIfCancellationRequested();
 
-                        //using (new Window($"src image {filename}", src))
-                        //using (new Window($"resut image {filename}", resut))
-                        //{
-                        //    //Cv2.WaitKey();
-                        //}
-                    });
+                                Mat src = new Mat(filename);
+                                Mat resut = src.Canny(50, 200);
+                            }
+
+                            //using (new Window($"src image {filename}", src))
+                            //using (new Window($"resut image {filename}", resut))
+                            //{
+                            //    //Cv2.WaitKey();
+                            //}
+                        });
+                    }
+                    catch (AggregateException ex) when (ex.InnerExceptions.Any(x => x is OperationCanceledException))
+                    {
+                        // Flat cancellation on any ParallelForEach as a simple Cancel
+                        throw new OperationCanceledException();
+                    }
                 });
+
+                ResultText = $"Process took {sw.Elapsed.TotalSeconds} seconds";
+            }
+            catch (OperationCanceledException)
+            {
+                ResultText = "Cancelled";
+            }
+        }
+
+        private async Task ProcessWebImpl()
+        {
+            _ctsCancel = new CancellationTokenSource();
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            try
+            {
+                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://dotnet.microsoft.com", "https://github.com" };
+
+                foreach (var web in websites)
+                {
+                    // Check cancel
+                    _ctsCancel.Token.ThrowIfCancellationRequested();
+
+                    // Download web
+                    using (var client = new System.Net.Http.HttpClient())
+                    {
+                        string response = await client.GetStringAsync(web);
+                    }
+                }
+
+                ResultText = $"Process took {sw.Elapsed.TotalSeconds} seconds";
+            }
+            catch (OperationCanceledException)
+            {
+                ResultText = "Cancelled";
+            }
+        }
+
+        private async Task ProcessWebParallelImpl()
+        {
+            _ctsCancel = new CancellationTokenSource();
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            try
+            {
+                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://dotnet.microsoft.com", "https://github.com" };
+
+                async Task DownloadWeb(string web)
+                {
+                    // Download web
+                    using (var client = new System.Net.Http.HttpClient())
+                    {
+                        string response = await client.GetStringAsync(web);
+                    }
+
+                    // Check cancel
+                    _ctsCancel.Token.ThrowIfCancellationRequested();
+                }
+
+                var downloadTasks = websites.Select(x => DownloadWeb(x));
+                await Task.WhenAll(downloadTasks);
 
                 ResultText = $"Process took {sw.Elapsed.TotalSeconds} seconds";
             }
