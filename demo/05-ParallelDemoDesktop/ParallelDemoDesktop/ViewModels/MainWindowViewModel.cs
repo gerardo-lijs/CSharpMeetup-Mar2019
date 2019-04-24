@@ -21,7 +21,7 @@ namespace AsyncCancelDesktop.ViewModels
         public ReactiveCommand<Unit, Unit> ProcessWebParallel { get; }
 
         // Cancel
-        public ReactiveCommand<Unit, Unit> CalculateCancel { get; }
+        public ReactiveCommand<Unit, Unit> CancelProcess { get; }
         private CancellationTokenSource _ctsCancel { get; set; }
 
         private string _ResultText;
@@ -50,7 +50,7 @@ namespace AsyncCancelDesktop.ViewModels
                 .ToProperty(this, x => x.IsCalculating);
 
             // Cancel command
-            CalculateCancel = ReactiveCommand.Create(() => _ctsCancel?.Cancel(true));
+            CancelProcess = ReactiveCommand.Create(() => _ctsCancel?.Cancel(true));
         }
 
         private async Task ProcessImagesImpl()
@@ -144,7 +144,7 @@ namespace AsyncCancelDesktop.ViewModels
 
             try
             {
-                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://dotnet.microsoft.com", "https://github.com" };
+                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://twitter.com/GerardoLijs", "https://github.com/gerardo-lijs" };
 
                 foreach (var web in websites)
                 {
@@ -175,8 +175,9 @@ namespace AsyncCancelDesktop.ViewModels
 
             try
             {
-                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://dotnet.microsoft.com", "https://github.com" };
+                var websites = new List<string>() { "https://www.dotnetfoundation.org", "https://twitter.com/GerardoLijs", "https://github.com/gerardo-lijs" };
 
+                // Option 1 - Use a local function
                 async Task DownloadWeb(string web)
                 {
                     // Download web
@@ -188,6 +189,21 @@ namespace AsyncCancelDesktop.ViewModels
                     // Check cancel
                     _ctsCancel.Token.ThrowIfCancellationRequested();
                 }
+
+                // Option 2 - Use a lambda if you prefer
+                //Func<string, Task> downloadWeb = async (web) =>
+                //{
+                //    // Download web
+                //    using (var client = new System.Net.Http.HttpClient())
+                //    {
+                //        string response = await client.GetStringAsync(web);
+                //    }
+
+                //    // Check cancel
+                //    _ctsCancel.Token.ThrowIfCancellationRequested();
+                //};
+
+                // Option 3 - Use a normal Task returning method in the class
 
                 var downloadTasks = websites.Select(x => DownloadWeb(x));
                 await Task.WhenAll(downloadTasks);

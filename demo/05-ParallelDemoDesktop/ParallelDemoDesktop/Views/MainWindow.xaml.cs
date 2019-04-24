@@ -31,7 +31,7 @@ namespace AsyncCancelDesktop.Views
                     .DisposeWith(disposableRegistration);
 
                 // Cancel
-                this.BindCommand(ViewModel, viewModel => viewModel.CalculateCancel, view => view.CancelButton).DisposeWith(disposableRegistration);
+                this.BindCommand(ViewModel, viewModel => viewModel.CancelProcess, view => view.CancelButton).DisposeWith(disposableRegistration);
 
                 this.OneWayBind(ViewModel, viewModel => viewModel.IsCalculating, view => view.CancelButton.Visibility)
                     .DisposeWith(disposableRegistration);
