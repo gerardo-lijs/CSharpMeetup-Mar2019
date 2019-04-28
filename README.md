@@ -9,7 +9,7 @@ Demo source code of a WPF application to demonstrate responsive UI and the benef
 * [Scalability and performance in web applications demo (Soure Code)](demo/02-AsyncWebAPI)  
 Demo source code of two Web API to demonstrate performance of using async with IO-bound and CPU-bound operations
 * [Parallel ForEach and Task.WhenAny demo application (Source Code)](demo/05-ParallelDemoDesktop)  
-Demo soure code of a simple WPF Desktop Application to demonstrate how you can use Task Parallel Library ForEach for CPU-bound operations and how you can use Task.WhenAny for IO-bound operations
+Demo soure code of a simple WPF Desktop Application to demonstrate how you can use Task Parallel Library ForEach for CPU-bound operations and how you can use Task.WhenAny for IO-bound operations  
 In this source code I used [ReactiveUI](https://reactiveui.net/) as MVVM framework, [MahApps](https://mahapps.com/) and [OpenCVSharp](https://github.com/shimat/opencvsharp) for simulating a CPU-bound expensive operation. If you are interested in this projects it's worth checkin it out since they are a minimalistic example and easy to see how they work.
 
 Notes
