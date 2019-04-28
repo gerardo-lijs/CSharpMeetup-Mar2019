@@ -9,5 +9,5 @@ This is bad! Application is not responding
 ![](slides/02-AsyncDesktopGood.PNG)
 This is good! Application still responsive with 100% CPU use
 
-##Code compare
+## Code compare
 ![](slides/03-CodeCompare.PNG)
