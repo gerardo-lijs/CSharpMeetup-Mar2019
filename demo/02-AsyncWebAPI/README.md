@@ -12,7 +12,7 @@ Demo source code of two Web API to demonstrate performance of using async with I
 ## Performance compare
 ![](slides/01-AsyncWebAPI-IO-bound-Compare.PNG)
 
-> Using async/await makes it about ten times better!
+> Using async/await makes it approximately ten times better!
 
 # Web API running IO-bound operation
 
