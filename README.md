@@ -2,8 +2,8 @@
 Asynchronous programming in .NET slides and code for this [MeetUp](https://www.meetup.com/meetup-group-bXuvFCuo/events/259826185/)
 
 ## Content
-* Slides [(Speaker Deck link)](https://speakerdeck.com/gerardolijs/asynchronous-programming-in) / [(PDF link)](slides.pdf)
-* Responsive WPF application demo [(Source Code)](demo/01-AsyncDesktop)  
+* Slides [(Speaker Deck)](https://speakerdeck.com/gerardolijs/asynchronous-programming-in) / [(PDF)](slides.pdf)
+* [Responsive WPF application demo (Source Code)](demo/01-AsyncDesktop)  
 Demo source code of a WPF application to demonstrate responsive UI and the beneficts of using async
 * [Scalability and performance in web applications demo (Soure Code)](demo/02-AsyncWebAPI)  
 Demo source code of two Web API to demonstrate performance of using async with IO-bound and CPU-bound operations
